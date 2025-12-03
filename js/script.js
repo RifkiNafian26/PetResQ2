@@ -106,13 +106,8 @@ const loginImage = document.querySelector(".modal-image-login");
 const registerImage = document.querySelector(".modal-image-register");
 const modalTitle = document.getElementById("modal-title");
 
-// Open modal when clicking profile button
-if (userProfileBtn && modal) {
-  userProfileBtn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    modal.classList.add("active");
-  });
-}
+// Event listener untuk profile button akan diatur oleh checkUserLogin()
+// (tidak ditambahkan di sini agar tidak konflik dengan login/logout logic)
 
 // Close modal when clicking close button
 if (closeModalBtn) {
@@ -145,6 +140,13 @@ switchTabLinks.forEach((link) => {
     // Add active class to target content
     document.getElementById(tabName + "-tab").classList.add("active");
 
+    // Clear error message
+    const errorDiv = document.getElementById("form-error");
+    if (errorDiv) {
+      errorDiv.style.display = "none";
+      errorDiv.textContent = "";
+    }
+
     // Switch images
     if (tabName === "login") {
       if (loginImage) loginImage.classList.add("active");
@@ -174,3 +176,196 @@ if (modal) {
 if (typeof feather !== "undefined") {
   feather.replace();
 }
+
+// Check user login status on page load
+function checkUserLogin() {
+  fetch("check_session.php")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.is_logged_in) {
+        displayUserProfile(data.user_name, data.user_email);
+      } else {
+        displayLoginButton();
+      }
+    })
+    .catch((error) => console.error("Error checking login:", error));
+}
+
+// Display user profile with initials
+function displayUserProfile(userName, userEmail) {
+  const userProfile = document.getElementById("user-profile");
+  const userName_span = userProfile.querySelector(".user-name");
+  const userInitial = userProfile.querySelector(".user-initial");
+  const profileIcon = userProfile.querySelector(".profile-icon");
+
+  // Hide icon and "LOGIN" text
+  if (profileIcon) profileIcon.style.display = "none";
+  if (userName_span) userName_span.style.display = "none";
+
+  // Show user name
+  if (userInitial) {
+    userInitial.textContent = userName;
+    userInitial.style.display = "inline-block";
+  }
+
+  // Update dropdown menu with user info
+  const dropdownName = document.getElementById("dropdown-name");
+  const dropdownEmail = document.getElementById("dropdown-email");
+  if (dropdownName) dropdownName.textContent = userName;
+  if (dropdownEmail) dropdownEmail.textContent = userEmail;
+
+  // Close modal if open
+  const modal = document.getElementById("auth-modal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+
+  // Replace element to remove old event listeners
+  const newUserProfile = userProfile.cloneNode(true);
+  userProfile.parentNode.replaceChild(newUserProfile, userProfile);
+
+  // Add event listener for dropdown toggle
+  newUserProfile.addEventListener("click", toggleProfileMenu);
+}
+
+// Display login button
+function displayLoginButton() {
+  const userProfile = document.getElementById("user-profile");
+  const userName_span = userProfile.querySelector(".user-name");
+  const userInitial = userProfile.querySelector(".user-initial");
+  const profileIcon = userProfile.querySelector(".profile-icon");
+
+  // Show icon and "LOGIN" text
+  if (profileIcon) profileIcon.style.display = "block";
+  if (userName_span) userName_span.style.display = "inline";
+
+  // Hide initials
+  if (userInitial) {
+    userInitial.style.display = "none";
+  }
+
+  // Close dropdown
+  const dropdown = document.getElementById("profile-dropdown");
+  if (dropdown) {
+    dropdown.classList.remove("active");
+  }
+
+  // Remove all previous event listeners and add fresh one for login
+  userProfile.replaceWith(userProfile.cloneNode(true));
+  const newUserProfile = document.getElementById("user-profile");
+  newUserProfile.addEventListener("click", openLoginModal);
+}
+
+// Open login modal
+function openLoginModal(e) {
+  e.stopPropagation();
+  const modal = document.getElementById("auth-modal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+// Toggle profile dropdown menu
+function toggleProfileMenu(e) {
+  e.stopPropagation();
+  const dropdown = document.getElementById("profile-dropdown");
+  if (dropdown) {
+    dropdown.classList.toggle("active");
+  }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (e) {
+  const dropdown = document.getElementById("profile-dropdown");
+  const userProfile = document.getElementById("user-profile");
+
+  if (
+    dropdown &&
+    userProfile &&
+    !userProfile.contains(e.target) &&
+    !dropdown.contains(e.target)
+  ) {
+    dropdown.classList.remove("active");
+  }
+});
+
+// Handle form submissions with AJAX
+function handleFormSubmit(formId, phpFile) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const errorDiv = document.getElementById("form-error");
+
+    fetch(phpFile, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Success - reload to check login status
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+        } else {
+          // Show error message
+          if (errorDiv) {
+            errorDiv.textContent = data.message;
+            errorDiv.style.display = "block";
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        if (errorDiv) {
+          errorDiv.textContent = "An error occurred. Please try again.";
+          errorDiv.style.display = "block";
+        }
+      });
+  });
+}
+
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", function () {
+  // Check login status
+  checkUserLogin();
+
+  // Setup form submissions
+  handleFormSubmit("login-tab", "login.php");
+  handleFormSubmit("register-tab", "register.php");
+
+  // Setup logout button
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.location.href = "logout.php";
+    });
+  }
+
+  // Close dropdown when clicking navbar links
+  const navbarLinks = document.querySelectorAll(".navbar-nav a");
+  navbarLinks.forEach((link) => {
+    link.addEventListener("click", function () {
+      const dropdown = document.getElementById("profile-dropdown");
+      if (dropdown) {
+        dropdown.classList.remove("active");
+      }
+    });
+  });
+
+  // Close modal and dropdown when navigating
+  const notification = document.getElementById("notification");
+  if (notification) {
+    notification.addEventListener("click", function () {
+      const modal = document.getElementById("auth-modal");
+      const dropdown = document.getElementById("profile-dropdown");
+      if (modal) modal.classList.remove("active");
+      if (dropdown) dropdown.classList.remove("active");
+    });
+  }
+});
