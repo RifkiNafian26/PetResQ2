@@ -1,0 +1,318 @@
+/* Animal Profile Page Styling */
+
+.animal-profile-page {
+  min-height: calc(100vh - 50px);
+  background-color: var(--bg);
+  padding: 2rem 5%;
+  margin-top: 50px;
+}
+
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.greeting {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+/* Animal Header */
+.animal-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.animal-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #6e7b59;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.animal-basic-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.animal-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.animal-id {
+  font-size: 0.95rem;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Main Content Grid */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Left Side */
+.profile-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.animal-photo-section {
+  background-color: #6e7b59;
+  border-radius: 16px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Gallery */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.gallery-item {
+  aspect-ratio: 1;
+  background-color: #e8e8e8;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+/* Details Grid */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+}
+
+.detail-item {
+  background-color: #6e7b59;
+  color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.detail-item i {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Vaccination Section */
+.vaccination-section {
+  border: 2px solid #6e7b59;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.vaccination-header {
+  background-color: #f8f8f8;
+  padding: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.vaccination-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.vac-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.vac-row:last-child {
+  border-bottom: none;
+}
+
+.vac-col {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  border-right: 1px solid #e0e0e0;
+}
+
+.vac-col:last-child {
+  border-right: none;
+}
+
+/* Right Side */
+.profile-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Story Section */
+.story-section {
+  background-color: #6e7b59;
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: white;
+}
+
+.story-header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.story-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.story-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.story-item i {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.story-item span {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Contact Button */
+.btn-contact {
+  background-color: #6e7b59;
+  color: white;
+  border: none;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.btn-contact:hover {
+  background-color: #5a6848;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(106, 123, 89, 0.3);
+}
+
+/* Adoption CTA */
+.adoption-cta {
+  background-color: #f5f5f5;
+  border: 2px solid #6e7b59;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.adoption-question {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.btn-get-started {
+  background-color: #6e7b59;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-get-started:hover {
+  background-color: #5a6848;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+
+  .details-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .animal-photo-section {
+    height: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .animal-profile-page {
+    padding: 1rem 3%;
+  }
+
+  .animal-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .animal-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .animal-name {
+    font-size: 1.2rem;
+  }
+
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .animal-photo-section {
+    height: 250px;
+  }
+
+  .image-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

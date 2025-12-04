@@ -17,13 +17,13 @@
     <script src="https://unpkg.com/feather-icons"></script>
 
     <!-- My Style -->
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/styleadopt.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="styleadopt.css" />
   </head>
   <body>
     <!-- Navbar start -->
     <nav class="navbar">
-      <a href="index.html" class="navbar-logo">Pet<span>ResQ</span></a>
+      <a href="../index.html" class="navbar-logo">Pet<span>ResQ</span></a>
 
       <div class="navbar-nav">
         <a href="adopt.html">Adopt</a>
@@ -79,12 +79,12 @@
       <div class="modal-content modal-horizontal">
         <!-- Foto Hewan Login -->
         <div class="modal-image modal-image-login active">
-          <img src="icon/login2.jpg" alt="Login" />
+          <img src="../icon/login2.jpg" alt="Login" />
         </div>
 
         <!-- Foto Hewan Register -->
         <div class="modal-image modal-image-register">
-          <img src="icon/register.jpg" alt="Register" />
+          <img src="../icon/register.jpg" alt="Register" />
         </div>
 
         <!-- Form Container -->
@@ -221,7 +221,12 @@
           <div class="filter-controls">
             <!-- Animal Type Filter -->
             <div class="filter-group">
-              <label class="filter-label">Animal Type</label>
+              <div class="filter-label-header">
+                <label class="filter-label">Animal Type</label>
+                <button class="filter-toggle" aria-expanded="true">
+                  <i data-feather="chevron-down"></i>
+                </button>
+              </div>
               <div class="filter-options">
                 <div class="filter-option">
                   <input type="checkbox" id="dog" name="animal" value="dog" />
@@ -245,7 +250,12 @@
 
             <!-- Breed Filter -->
             <div class="filter-group">
-              <label class="filter-label">Breed</label>
+              <div class="filter-label-header">
+                <label class="filter-label">Breed</label>
+                <button class="filter-toggle" aria-expanded="true">
+                  <i data-feather="chevron-down"></i>
+                </button>
+              </div>
               <div class="filter-options">
                 <div class="filter-option">
                   <input
@@ -373,7 +383,12 @@
 
             <!-- Color Filter -->
             <div class="filter-group">
-              <label class="filter-label">Color</label>
+              <div class="filter-label-header">
+                <label class="filter-label">Color</label>
+                <button class="filter-toggle" aria-expanded="true">
+                  <i data-feather="chevron-down"></i>
+                </button>
+              </div>
               <div class="filter-options">
                 <div class="filter-option">
                   <input
@@ -411,7 +426,12 @@
 
             <!-- Age Filter -->
             <div class="filter-group">
-              <label class="filter-label">Age</label>
+              <div class="filter-label-header">
+                <label class="filter-label">Age</label>
+                <button class="filter-toggle" aria-expanded="true">
+                  <i data-feather="chevron-down"></i>
+                </button>
+              </div>
               <div class="filter-options">
                 <div class="filter-option">
                   <input type="checkbox" id="young" name="age" value="young" />
@@ -434,7 +454,10 @@
             </div>
           </div>
 
-          <button class="apply-filter-btn">Apply Your Filter</button>
+          <!-- Apply Filter Button (hidden - filters are real-time) -->
+          <button class="apply-filter-btn" style="display: none">
+            Apply Your Filter
+          </button>
         </section>
 
         <!-- Animal Cards Grid -->
@@ -659,6 +682,6 @@
     </script>
 
     <!-- My Javascript -->
-    <script src="js/script.js"></script>
+    <script src="../js/script.js"></script>
   </body>
 </html>
