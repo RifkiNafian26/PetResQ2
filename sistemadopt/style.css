@@ -4,7 +4,7 @@
 :root {
   --color-background-light: #fefae0; /* background */
   --color-background-dark: #383838; /* untuk footer */
-  --color-primary: #6c996c; /* Hijau utama/progress (unchanged - used by buttons and other UI) */
+  --color-primary: #5f6f52; /* Hijau utama/progress (unchanged - used by buttons and other UI) */
   --color-secondary: #ff7f50; /* Oranye/Cokelat (legacy) */
   /* step colors (new): current step = orange, completed steps = green */
   --step-current: #c4661f; /* active/current step (coklat) */

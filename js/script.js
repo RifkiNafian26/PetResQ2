@@ -698,7 +698,7 @@ function addAdminNavLink() {
 
   const link = document.createElement("a");
   // Point to guarded Admin panel entry
-  link.href = getPhpPath("Admin PetResQ/index.php");
+  link.href = getPhpPath("Admin PetResQ/index.html");
   link.textContent = "Admin";
   nav.appendChild(link);
 }

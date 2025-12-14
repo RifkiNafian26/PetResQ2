@@ -25,7 +25,8 @@
 }
 
 .navbar .navbar-logo {
-  font-family: "Kreon", serif;
+  font-family: Kavoon, serif;
+  letter-spacing: 1px;
 }
 
 .navbar .navbar-nav a {

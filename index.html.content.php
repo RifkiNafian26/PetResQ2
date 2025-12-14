@@ -35,15 +35,22 @@
   </div>
   </div>
 
-<!-- Impact Section -->
-<div id="Impact" class="impact-section">
-  <div class="impact-content">
-    <div class="impact-text">
-      <h3>IMPACT<br />THAT CAN<br />BE MADE</h3>
+    <!-- Impact Section -->
+    <section class="impact-section">
+    <div class="impact-blur"> 
+      <div class="impact-content">
+        <div class="impact-title">
+            <h3>IMPACT <br>THAT CAN <br> BE MADE</h3>
+        </div>
+        <div class="impact-box">
+          <div class="impact-text">
+            <p>
+                PetResQ creates a safe and trusted bridge between people who want to adopt animals and those who need to rehome them. By connecting both sides through verified admin approval, PetResQ makes the adoption process clearer, safer, and more responsible. Our platform helps more animals find loving homes, reduces abandonment, and builds a caring community where every pet has a chance for a better life.
+            </p>
+            </div>
+        </div>
     </div>
-    <div class="impact-box"></div>
-  </div>
-  </div>
+    </section>
 
 <!-- Footer -->
 <footer>

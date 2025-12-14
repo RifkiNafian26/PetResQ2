@@ -44,13 +44,17 @@ html {
 }
 
 .navbar .navbar-logo {
+  font-family: Kavoon, serif;
   font-size: 2rem;
   font-weight: 700;
   color: #5f6f52;
   flex-shrink: 0;
+  letter-spacing: 1px;
 }
 
 .navbar .navbar-logo span {
+  font-family: Kavoon, serif;
+  letter-spacing: 1px;
   color: #5f6f52;
 }
 
@@ -456,40 +460,47 @@ html {
 
 .impact-section {
   background-color: #fefae0;
-  padding: 60px 40px;
-  margin-top: 40px;
+  margin-bottom: 3rem;
+}
+
+.impact-blur {
+  display: flex;
+  justify-content: center;
+  background-color:rgba(95, 111, 82, 0.10000000149011612);
+  position: relative;
+  padding: 30px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);;
 }
 
 .impact-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 1000px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 60px;
+  gap: 30px;
 }
 
-.impact-text {
-  flex: 0 0 auto;
-}
-
-.impact-text h3 {
-  color: #000;
-  font-family: "Kreon", sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+.impact-title {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.1;
+    color: #333;
+    font-family: Kreon, serif; 
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
 }
 
 .impact-box {
-  flex: 1;
-  min-height: 200px;
-  background-color: #6e7b59;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  flex-basis: 70%;
+  background-color: #5f6f52; /* Warna hijau zaitun */
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.impact-text {
+    color: #f0f0f0;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 @media (max-width: 768px) {
@@ -581,11 +592,12 @@ footer {
 }
 
 .footer-logo {
-  font-family: "Kreon", sans-serif;
+  font-family: "Kavoon", serif;
   color: white;
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
+  letter-spacing: 1px;
 }
 
 .footer-right {
@@ -594,11 +606,12 @@ footer {
 }
 
 .footer-right h3 {
-  font-family: "Kreon", sans-serif;
+  font-family: "Kavoon", sans-serif;
   font-size: 1.8rem;
   font-weight: 700;
   color: white;
   margin: 0 0 20px 0;
+  letter-spacing: 1px;
 }
 
 .contact-item {

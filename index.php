@@ -39,13 +39,12 @@ require_once 'config.php';
           </div>
         </div>
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-          <a href="Admin PetResQ/index.php">Admin</a>
+          <a href="Admin PetResQ/index.html">Admin</a>
         <?php endif; ?>
       </div>
 
       <div class="navbar-extra" aria-label="Top right taskbar">
         <a href="#" id="notification" aria-label="Notifications"><i data-feather="bell"></i></a>
-
         <button aria-label="User account" class="user-profile" id="user-profile" type="button">
           <div class="user-profile-inner">
             <svg class="profile-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
