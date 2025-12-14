@@ -22,6 +22,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   </head>
   <body>
     <!-- Navbar start -->
@@ -304,6 +306,73 @@
       </div>
     </div>
 
+    <!-- Animal Detail Modal -->
+    <div id="animal-detail-modal" class="modal">
+      <div class="modal-content-submission-detail">
+        <h3>Animal Details <span id="animal-detail-id"></span></h3>
+        <div class="animal-detail-content">
+          <div class="animal-detail-image">
+            <img id="animal-detail-photo" src="" alt="Animal Photo" style="width: 100%; max-width: 300px; border-radius: 8px; margin-bottom: 20px;">
+          </div>
+          <div class="submission-info-grid">
+            <div class="info-row">
+              <strong>Animal Name:</strong>
+              <span id="animal-detail-name"></span>
+            </div>
+            <div class="info-row">
+              <strong>Type:</strong>
+              <span id="animal-detail-type"></span>
+            </div>
+            <div class="info-row">
+              <strong>Breed:</strong>
+              <span id="animal-detail-breed"></span>
+            </div>
+            <div class="info-row">
+              <strong>Gender:</strong>
+              <span id="animal-detail-gender"></span>
+            </div>
+            <div class="info-row">
+              <strong>Age:</strong>
+              <span id="animal-detail-age"></span>
+            </div>
+            <div class="info-row">
+              <strong>Color:</strong>
+              <span id="animal-detail-color"></span>
+            </div>
+            <div class="info-row">
+              <strong>Weight:</strong>
+              <span id="animal-detail-weight"></span>
+            </div>
+            <div class="info-row">
+              <strong>Height:</strong>
+              <span id="animal-detail-height"></span>
+            </div>
+            <div class="info-row">
+              <strong>Status:</strong>
+              <span id="animal-detail-status"></span>
+            </div>
+            <div class="info-row">
+              <strong>Uploaded By:</strong>
+              <span id="animal-detail-uploaded-by"></span>
+            </div>
+          </div>
+          <div class="form-group-report">
+            <label>Description:</label>
+            <textarea
+              id="animal-detail-description"
+              readonly
+              style="height: 120px; background: #f9f9f5"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-actions-submission">
+          <button type="button" class="btn btn-cancel modal-cancel">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Submission Detail Modal -->
     <div id="submission-detail-modal" class="modal">
       <div class="modal-content-submission-detail">
@@ -354,6 +423,20 @@
             style="height: 120px; background: #f9f9f5"
           ></textarea>
         </div>
+        <div class="form-group-report" id="home-photos-section">
+          <label>Home Photos:</label>
+          <div
+            id="submission-home-photos"
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+              gap: 12px;
+              margin-top: 8px;
+            "
+          >
+            <!-- Photos will be inserted here -->
+          </div>
+        </div>
         <div class="form-group-report">
           <label>Additional Details:</label>
           <div
@@ -370,6 +453,12 @@
           </div>
         </div>
         <div class="modal-actions-submission">
+          <button type="button" class="btn btn-approve btn-approve-rehome" id="modal-approve-btn" style="display: none;">
+            <i class="fas fa-check"></i> Approve
+          </button>
+          <button type="button" class="btn btn-reject btn-reject-rehome" id="modal-reject-btn" style="display: none;">
+            <i class="fas fa-times"></i> Reject
+          </button>
           <button type="button" class="btn btn-cancel modal-cancel">
             Close
           </button>

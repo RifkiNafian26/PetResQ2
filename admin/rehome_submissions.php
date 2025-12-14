@@ -2,6 +2,12 @@
 session_start();
 require_once '../config.php';
 
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit;
+}
+
 // Check if admin
 $role = $_SESSION['role'] ?? '';
 if ($role !== 'admin') {
@@ -12,9 +18,9 @@ if ($role !== 'admin') {
 // Fetch all rehome submissions with user info
 $query = "SELECT rs.id, rs.user_id, rs.pet_name, rs.pet_type, rs.age_years, rs.breed, 
                  rs.gender, rs.city, rs.postcode, rs.spayed_neutered, rs.rehome_reason,
-                 rs.status, rs.submitted_at, u.nama_user, u.email_user
+                 rs.status, rs.submitted_at, u.nama, u.email
           FROM rehome_submissions rs
-          JOIN user u ON rs.user_id = u.id_user
+          LEFT JOIN user u ON rs.user_id = u.id_user
           ORDER BY rs.submitted_at DESC";
 
 $result = mysqli_query($conn, $query);
@@ -440,7 +446,7 @@ $stats = mysqli_fetch_assoc($stats_result) ?? [];
                 
                 <div class="card-item name">
                     <i class="fas fa-user"></i>
-                    <?php echo htmlspecialchars($sub['nama_user']); ?>
+                    <?php echo htmlspecialchars($sub['nama'] ?? 'Unknown'); ?>
                 </div>
                 
                 <div class="card-item">
@@ -454,7 +460,7 @@ $stats = mysqli_fetch_assoc($stats_result) ?? [];
                 
                 <div class="card-item email">
                     <i class="fas fa-envelope"></i>
-                    <?php echo htmlspecialchars($sub['email_user']); ?>
+                    <?php echo htmlspecialchars($sub['email'] ?? 'N/A'); ?>
                 </div>
                 
                 <div class="card-item">

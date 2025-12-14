@@ -13,8 +13,8 @@ $email = $_SESSION['user_email'] ?? '';
 // Fetch user's adoption applications
 $apps = [];
 $sql = "SELECT a.id, a.hewan_id, a.status, a.submitted_at,
-               a.address_line1, a.city, a.postcode, a.living_situation,
-               h.namaHewan AS pet_name
+               a.address_line1, a.postcode, a.living_situation,
+               h.namaHewan AS pet_name, h.jenis AS pet_type
         FROM adoption_applications a
         LEFT JOIN hewan h ON h.id_hewan = a.hewan_id
         WHERE a.applicant_user_id = ?
@@ -22,13 +22,41 @@ $sql = "SELECT a.id, a.hewan_id, a.status, a.submitted_at,
 $stmt = mysqli_prepare($conn, $sql);
 if ($stmt) {
   mysqli_stmt_bind_param($stmt, 'i', $userId);
-  mysqli_stmt_execute($stmt);
-  $res = mysqli_stmt_get_result($stmt);
-  if ($res) {
-    while ($row = mysqli_fetch_assoc($res)) {
-      $apps[] = $row;
+  if (mysqli_stmt_execute($stmt)) {
+    $res = mysqli_stmt_get_result($stmt);
+    if ($res) {
+      while ($row = mysqli_fetch_assoc($res)) {
+        $apps[] = $row;
+      }
+    }
+  } else {
+    // Log error for debugging
+    error_log("Failed to execute adoption applications query for user $userId: " . mysqli_stmt_error($stmt));
+  }
+  mysqli_stmt_close($stmt);
+} else {
+  // Log error for debugging
+  error_log("Failed to prepare adoption applications query for user $userId: " . mysqli_error($conn));
+}
+
+// Fetch user's rehome submissions
+$rehomes = [];
+$rehome_sql = "SELECT id, pet_name, pet_type, age_years, breed, gender, 
+                      status, submitted_at, updated_at
+               FROM rehome_submissions
+               WHERE user_id = ?
+               ORDER BY submitted_at DESC";
+$rehome_stmt = mysqli_prepare($conn, $rehome_sql);
+if ($rehome_stmt) {
+  mysqli_stmt_bind_param($rehome_stmt, 'i', $userId);
+  mysqli_stmt_execute($rehome_stmt);
+  $rehome_res = mysqli_stmt_get_result($rehome_stmt);
+  if ($rehome_res) {
+    while ($row = mysqli_fetch_assoc($rehome_res)) {
+      $rehomes[] = $row;
     }
   }
+  mysqli_stmt_close($rehome_stmt);
 }
 ?>
 <!DOCTYPE html>
@@ -159,7 +187,10 @@ if ($stmt) {
       <tbody>
         <?php if (empty($apps)) : ?>
           <tr><td colspan="6" style="text-align:center;">No submissions yet</td></tr>
-        <?php else: foreach ($apps as $a): ?>
+        <?php else: 
+          // Debug: uncomment to see data
+          // error_log("Found " . count($apps) . " adoption applications for user $userId");
+          foreach ($apps as $a): ?>
           <tr>
             <td><?php echo (int)$a['id']; ?></td>
             <td>
@@ -170,14 +201,42 @@ if ($stmt) {
             </td>
             <td><span class="badge status-<?php echo htmlspecialchars($a['status']); ?>"><?php echo htmlspecialchars($a['status']); ?></span></td>
             <td><?php echo htmlspecialchars($a['submitted_at']); ?></td>
-            <td><?php echo htmlspecialchars($a['address_line1']); ?>, <?php echo htmlspecialchars($a['city'] ?? ''); ?> (<?php echo htmlspecialchars($a['postcode']); ?>)</td>
+            <td><?php echo htmlspecialchars($a['address_line1'] ?? ''); ?> (<?php echo htmlspecialchars($a['postcode'] ?? ''); ?>)</td>
             <td><?php echo htmlspecialchars($a['living_situation'] ?? ''); ?></td>
           </tr>
         <?php endforeach; endif; ?>
       </tbody>
     </table>
 
-    <!-- Future: add Rehome submissions history here when backend available -->
+    <h2>Rehome Submissions</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Pet Name</th>
+          <th>Type</th>
+          <th>Breed</th>
+          <th>Status</th>
+          <th>Submitted</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php if (empty($rehomes)) : ?>
+          <tr><td colspan="7" style="text-align:center;">No rehome submissions yet</td></tr>
+        <?php else: foreach ($rehomes as $r): ?>
+          <tr>
+            <td><?php echo (int)$r['id']; ?></td>
+            <td><?php echo htmlspecialchars($r['pet_name']); ?></td>
+            <td><?php echo htmlspecialchars($r['pet_type']); ?></td>
+            <td><?php echo htmlspecialchars($r['breed']); ?></td>
+            <td><span class="badge status-<?php echo htmlspecialchars($r['status']); ?>"><?php echo htmlspecialchars($r['status']); ?></span></td>
+            <td><?php echo htmlspecialchars($r['submitted_at']); ?></td>
+            <td><?php echo htmlspecialchars($r['updated_at'] ?? $r['submitted_at']); ?></td>
+          </tr>
+        <?php endforeach; endif; ?>
+      </tbody>
+    </table>
   </main>
 
   <footer>

@@ -102,14 +102,28 @@ if (!empty($missing_fields)) {
     exit;
 }
 
-// Handle file upload for pet image
+// Handle file upload for pet image - REQUIRED
 $pet_image_path = null;
+$pet_image_required = true;
+
 if (isset($_FILES['pet_image']) && $_FILES['pet_image']['error'] === UPLOAD_ERR_OK) {
     $upload_dir = '../uploads/rehome/';
     
-    // Create directory if it doesn't exist
+    // Create directory if it doesn't exist with proper permissions
     if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
+        if (!mkdir($upload_dir, 0777, true)) {
+            http_response_code(500);
+            if (ob_get_level()) { ob_clean(); }
+            echo json_encode(['success' => false, 'message' => 'Failed to create upload directory']);
+            exit;
+        }
+        // Set permissions explicitly
+        chmod($upload_dir, 0777);
+    } else {
+        // Ensure existing directory has write permissions
+        if (!is_writable($upload_dir)) {
+            chmod($upload_dir, 0777);
+        }
     }
     
     $file_ext = strtolower(pathinfo($_FILES['pet_image']['name'], PATHINFO_EXTENSION));
@@ -126,8 +140,47 @@ if (isset($_FILES['pet_image']) && $_FILES['pet_image']['error'] === UPLOAD_ERR_
             if (move_uploaded_file($_FILES['pet_image']['tmp_name'], $filepath)) {
                 $pet_image_path = 'uploads/rehome/' . $filename;
             }
+        } else {
+            http_response_code(400);
+            if (ob_get_level()) { ob_clean(); }
+            echo json_encode(['success' => false, 'message' => 'Pet image size must be between 240 KB and 1024 KB']);
+            exit;
         }
+    } else {
+        http_response_code(400);
+        if (ob_get_level()) { ob_clean(); }
+        echo json_encode(['success' => false, 'message' => 'Pet image must be in JPG, JPEG, or PNG format']);
+        exit;
     }
+} else {
+    // Check if file was uploaded but had an error
+    if (isset($_FILES['pet_image'])) {
+        $error = $_FILES['pet_image']['error'];
+        if ($error === UPLOAD_ERR_NO_FILE) {
+            http_response_code(400);
+            if (ob_get_level()) { ob_clean(); }
+            echo json_encode(['success' => false, 'message' => 'Pet image is required. Please upload a photo of your pet.']);
+            exit;
+        } else {
+            http_response_code(400);
+            if (ob_get_level()) { ob_clean(); }
+            echo json_encode(['success' => false, 'message' => 'Error uploading pet image. Please try again.']);
+            exit;
+        }
+    } else {
+        http_response_code(400);
+        if (ob_get_level()) { ob_clean(); }
+        echo json_encode(['success' => false, 'message' => 'Pet image is required. Please upload a photo of your pet.']);
+        exit;
+    }
+}
+
+// Validate that pet_image_path is set
+if (empty($pet_image_path)) {
+    http_response_code(400);
+    if (ob_get_level()) { ob_clean(); }
+    echo json_encode(['success' => false, 'message' => 'Pet image is required. Please upload a photo of your pet.']);
+    exit;
 }
 
 // Handle multiple document uploads
@@ -137,11 +190,18 @@ if (isset($_FILES['documents'])) {
     $doc_count = count($_FILES['documents']['name']);
     
     for ($i = 0; $i < $doc_count; $i++) {
-        if ($_FILES['documents']['error'][$i] === UPLOAD_ERR_OK) {
+            if ($_FILES['documents']['error'][$i] === UPLOAD_ERR_OK) {
             $upload_dir = '../uploads/rehome/documents/';
             
             if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
+                if (!mkdir($upload_dir, 0777, true)) {
+                    continue; // Skip this document if directory creation fails
+                }
+                chmod($upload_dir, 0777);
+            } else {
+                if (!is_writable($upload_dir)) {
+                    chmod($upload_dir, 0777);
+                }
             }
             
             $file_ext = strtolower(pathinfo($_FILES['documents']['name'][$i], PATHINFO_EXTENSION));
@@ -184,8 +244,8 @@ $query = "INSERT INTO rehome_submissions (
     pet_name, pet_type, age_years, breed, color, weight, height, gender,
     address_line1, city, postcode,
     spayed_neutered, rehome_reason, pet_story,
-    pet_image_path, documents_json, status
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    pet_image_path, documents_json, status, submitted_at, updated_at
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
 $stmt = mysqli_prepare($conn, $query);
 

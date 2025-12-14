@@ -32,7 +32,8 @@ $sql = "SELECT id,
         postcode,
         has_garden,
         living_situation,
-        details_json
+        details_json,
+        home_photos_json
     FROM adoption_applications
     ORDER BY submitted_at DESC
     LIMIT 200";
@@ -58,6 +59,15 @@ if ($res) {
             }
         }
 
+        // Parse home photos JSON if present
+        $home_photos = [];
+        if (!empty($row['home_photos_json'])) {
+            $photos_decoded = json_decode($row['home_photos_json'], true);
+            if (is_array($photos_decoded)) {
+                $home_photos = $photos_decoded;
+            }
+        }
+
         $items[] = [
             'id' => isset($row['id']) ? (int)$row['id'] : 0,
             'adopterName' => $row['adopter_name'] ?? ($row['full_name'] ?? ''),
@@ -73,7 +83,8 @@ if ($res) {
             'postcode' => $row['postcode'] ?? '',
             'hasGarden' => isset($row['has_garden']) ? (int)$row['has_garden'] : 0,
             'living' => $row['living_situation'] ?? '',
-            'details' => $extra
+            'details' => $extra,
+            'home_photos' => $home_photos // Array of photo paths
         ];
     }
     echo json_encode(['data' => $items]);

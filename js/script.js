@@ -132,42 +132,68 @@ function setActiveNavLink() {
   console.log("Current path:", currentPath); // Debug
 
   navLinks.forEach((link) => {
-    const linkHref = link.getAttribute("href");
     const linkText = link.textContent.trim();
 
     link.classList.remove("active");
 
-    // Match logic based on current page
+    // Home page
     if (
       currentPage === "index.html" ||
+      currentPage === "index.php" ||
       currentPage === "" ||
       currentPage === "PetResQ"
     ) {
-      // Home page - but exclude sistemadopt
       if (!currentPath.includes("sistemadopt") && linkText === "Home") {
         link.classList.add("active");
-        console.log("Set active: Home"); // Debug
+        console.log("Set active: Home");
       }
-    } else if (currentPage === "adopt.html" || currentPage === "adopt.php") {
-      // Adopt page
+    }
+    // Adopt pages
+    else if (currentPage === "adopt.html" || currentPage === "adopt.php") {
       if (linkText === "Adopt") {
         link.classList.add("active");
-        console.log("Set active: Adopt"); // Debug
+        console.log("Set active: Adopt");
       }
-    } else if (
+    }
+    // Animal profile also highlights Adopt
+    else if (
       currentPage === "animalprofile.html" ||
       currentPage === "animalprofile.php"
     ) {
-      // Animal profile page - also highlight Adopt
       if (linkText === "Adopt") {
         link.classList.add("active");
-        console.log("Set active: Adopt (from profile)"); // Debug
+        console.log("Set active: Adopt (from profile)");
       }
-    } else if (currentPath.includes("sistemadopt")) {
-      // Sistem adopt page - highlight Adopt
+    }
+    // Sistem adopt pages
+    else if (currentPath.includes("sistemadopt")) {
       if (linkText === "Adopt") {
         link.classList.add("active");
-        console.log("Set active: Adopt (from sistemadopt)"); // Debug
+        console.log("Set active: Adopt (from sistemadopt)");
+      }
+    }
+    // Care Guides pages: highlight Care Guides parent link
+    else if (currentPath.includes("careguides/")) {
+      const parentLink = document.querySelector(
+        ".navbar-dropdown .care-guides-link"
+      );
+      if (parentLink) {
+        parentLink.classList.add("active");
+        // Also mark dropdown as active for consistent styling
+        const dropdown = parentLink.closest(".navbar-dropdown");
+        if (dropdown) dropdown.classList.add("active");
+        console.log("Set active: Care Guides");
+      }
+    }
+    // Rehome pages
+    else if (
+      currentPage === "rehome.html" ||
+      currentPage === "submit_rehome.php" ||
+      currentPage === "rehome.php"
+    ) {
+      if (linkText === "Rehome") {
+        link.classList.add("active");
+        console.log("Set active: Rehome");
       }
     }
   });
@@ -230,20 +256,35 @@ function setupModalListeners() {
   const registerImage = document.querySelector(".modal-image-register");
   const modalTitle = document.getElementById("modal-title");
 
-  // Close modal when clicking close button
+  //close modal event
   if (closeModalBtn) {
     closeModalBtn.addEventListener("click", function () {
       if (modal) {
         modal.classList.remove("active");
+        modal.style.display = "";
+        modal.style.zIndex = "";
+        modal.style.visibility = "";
+        modal.style.opacity = "";
+        const modalContent = modal.querySelector(".modal-content");
+        if (modalContent) {
+          modalContent.style.display = "";
+        }
       }
     });
   }
 
-  // Close modal when clicking outside
   if (modal) {
     modal.addEventListener("click", function (e) {
       if (e.target === modal) {
         modal.classList.remove("active");
+        modal.style.display = "";
+        modal.style.zIndex = "";
+        modal.style.visibility = "";
+        modal.style.opacity = "";
+        const modalContent = modal.querySelector(".modal-content");
+        if (modalContent) {
+          modalContent.style.display = "";
+        }
       }
     });
   }
@@ -308,7 +349,16 @@ function setupModalListeners() {
 function checkUserLogin() {
   const sessionPath = getPhpPath("check_session.php");
   fetch(sessionPath)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Response is not JSON");
+      }
+      return response.json();
+    })
     .then((data) => {
       if (data.is_logged_in) {
         displayUserProfile(data.user_name, data.user_email);
@@ -326,7 +376,12 @@ function checkUserLogin() {
         removeAdminNavLink();
       }
     })
-    .catch((error) => console.error("Error checking login:", error));
+    .catch((error) => {
+      console.error("Error checking login:", error);
+      // Fallback: show login button if check fails
+      displayLoginButton();
+      removeAdminNavLink();
+    });
 }
 
 // Display user profile with initials
@@ -389,17 +444,48 @@ function displayLoginButton() {
   }
 
   // Remove all previous event listeners and add fresh one for login
-  userProfile.replaceWith(userProfile.cloneNode(true));
+  const clonedProfile = userProfile.cloneNode(true);
+  userProfile.parentNode.replaceChild(clonedProfile, userProfile);
+
   const newUserProfile = document.getElementById("user-profile");
-  newUserProfile.addEventListener("click", openLoginModal);
+  if (newUserProfile) {
+    newUserProfile.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("Login button clicked");
+      openLoginModal(e);
+    });
+    console.log("Login button event listener attached");
+  } else {
+    console.error("Failed to find user-profile after cloning");
+  }
 }
 
 // Open login modal
 function openLoginModal(e) {
-  e.stopPropagation();
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
   const modal = document.getElementById("auth-modal");
   if (modal) {
+    console.log("Opening login modal");
     modal.classList.add("active");
+    modal.style.display = "flex";
+    modal.style.zIndex = "10000";
+    modal.style.visibility = "visible";
+    modal.style.opacity = "1";
+
+    // Ensure modal content is visible
+    const modalContent = modal.querySelector(".modal-content");
+    if (modalContent) {
+      modalContent.style.display = "flex";
+    }
+
+    console.log("Modal should be visible now");
+  } else {
+    console.error("Auth modal not found in DOM");
+    alert("Login modal not found. Please refresh the page.");
   }
 }
 
@@ -430,15 +516,26 @@ document.addEventListener("click", function (e) {
 // Get the correct path to PHP files based on current location
 function getPhpPath(phpFile) {
   // Check if we're in a subdirectory by looking at the current pathname
-  const pathSegments = window.location.pathname.split("/");
+  const pathSegments = window.location.pathname
+    .split("/")
+    .filter((seg) => seg !== "");
 
-  // If the current page is in a subdirectory (like /adopt/adopt.html)
-  // we need to go up one level to reach the PHP files
+  console.log("Current path segments:", pathSegments);
+  console.log("Requested PHP file:", phpFile);
+
+  // pathSegments for /pet-rpl/proyek/index.php would be: ["pet-rpl", "proyek", "index.php"]
+  // pathSegments for /pet-rpl/proyek/adopt/adopt.php would be: ["pet-rpl", "proyek", "adopt", "adopt.php"]
+
+  // If we're in proyek/ root (index.php), pathSegments.length would be 3
+  // If we're in a subdirectory like adopt/, pathSegments.length would be 4 or more
   if (pathSegments.length > 3) {
-    // We're in a subdirectory
-    return `../${phpFile}`;
+    // We're in a subdirectory, need to go up one level
+    const result = `../${phpFile}`;
+    console.log("Subdirectory detected, using path:", result);
+    return result;
   }
-  // We're in the root directory
+  // We're in the root directory (proyek/)
+  console.log("Root directory, using path:", phpFile);
   return phpFile;
 }
 
@@ -543,6 +640,39 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // Guard Rehome: require login, otherwise show login modal
+  const rehomeLink = Array.from(document.querySelectorAll('.navbar-nav a')).find(
+    (a) => a.textContent.trim().toLowerCase() === 'rehome'
+  );
+  if (rehomeLink) {
+    rehomeLink.addEventListener('click', function (e) {
+      // Prevent immediate navigation until we check session
+      e.preventDefault();
+      e.stopPropagation();
+
+      const sessionPath = getPhpPath('check_session.php');
+      fetch(sessionPath)
+        .then((response) => {
+          if (!response.ok) throw new Error('Session check failed');
+          return response.json();
+        })
+        .then((data) => {
+          if (data && data.is_logged_in) {
+            // Proceed to Rehome page
+            window.location.href = getPhpPath('rehome/rehome.html');
+          } else {
+            // Not logged in: open login modal
+            openLoginModal();
+          }
+        })
+        .catch((err) => {
+          console.error('Error checking session:', err);
+          // Fallback: show login modal
+          openLoginModal();
+        });
+    });
+  }
 
   // Close modal and dropdown when navigating
   const notification = document.getElementById("notification");

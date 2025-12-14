@@ -2,6 +2,12 @@
 session_start();
 require_once '../config.php';
 
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit;
+}
+
 // Check if admin
 $role = $_SESSION['role'] ?? '';
 if ($role !== 'admin') {
@@ -16,9 +22,9 @@ if ($id === 0) {
 }
 
 // Fetch submission
-$query = "SELECT rs.*, u.nama_user, u.email_user 
+$query = "SELECT rs.*, u.nama, u.email 
           FROM rehome_submissions rs
-          JOIN user u ON rs.user_id = u.id_user
+          LEFT JOIN user u ON rs.user_id = u.id_user
           WHERE rs.id = ?";
 
 $stmt = mysqli_prepare($conn, $query);
@@ -337,11 +343,11 @@ $updated = isset($_GET['updated']) ? true : false;
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label">Name</div>
-                    <div class="info-value"><?php echo htmlspecialchars($submission['nama_user']); ?></div>
+                    <div class="info-value"><?php echo htmlspecialchars($submission['nama'] ?? 'Unknown'); ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Email</div>
-                    <div class="info-value"><a href="mailto:<?php echo htmlspecialchars($submission['email_user']); ?>"><?php echo htmlspecialchars($submission['email_user']); ?></a></div>
+                    <div class="info-value"><a href="mailto:<?php echo htmlspecialchars($submission['email'] ?? ''); ?>"><?php echo htmlspecialchars($submission['email'] ?? 'N/A'); ?></a></div>
                 </div>
             </div>
         </div>

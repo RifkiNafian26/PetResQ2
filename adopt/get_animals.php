@@ -8,8 +8,9 @@ $color = isset($_GET['color']) ? $_GET['color'] : [];
 $age = isset($_GET['age']) ? $_GET['age'] : [];
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Build query
-$query = "SELECT * FROM hewan WHERE status = 'Available'";
+// Build query - include both Available and Adopted animals
+// Adopted animals will be shown but disabled
+$query = "SELECT * FROM hewan WHERE status IN ('Available', 'Adopted')";
 $conditions = [];
 $params = [];
 $types = '';
@@ -85,6 +86,10 @@ while ($row = mysqli_fetch_assoc($result)) {
     // Use main_photo path directly from database
     if (empty($row['main_photo'])) {
         $row['main_photo'] = '';
+    }
+    // Ensure status is included and properly formatted
+    if (!isset($row['status']) || empty($row['status'])) {
+        $row['status'] = 'Available';
     }
     $animals[] = $row;
 }

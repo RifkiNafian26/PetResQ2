@@ -27,11 +27,11 @@ require_once '../config.php';
   <body>
     <!-- Navbar start -->
     <nav class="navbar">
-      <a href="../index.html" class="navbar-logo">Pet<span>ResQ</span></a>
+      <a href="../index.php" class="navbar-logo">Pet<span>ResQ</span></a>
 
       <div class="navbar-nav">
-        <a href="../index.html">Home</a>
-        <a href="adopt.php">Adopt</a>
+        <a href="../index.php">Home</a>
+        <a href="#">Adopt</a>
         <a href="../rehome/rehome.html">Rehome</a>
         <div class="navbar-dropdown">
           <a href="#care-guides" class="care-guides-link">Care Guides</a>
@@ -41,7 +41,7 @@ require_once '../config.php';
             <a href="../careguides/Rabbit Care Guides.html">Rabbit</a>
           </div>
         </div>
-        <a href="#about">About</a>
+        
       </div>
 
       <div class="navbar-extra" aria-label="Top right taskbar">

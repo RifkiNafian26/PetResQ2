@@ -74,7 +74,7 @@ if (!empty($animal['main_photo'])) {
         <a href="adopt.php">Adopt</a>
         <a href="../rehome/rehome.html">Rehome</a>
         <a href="#care-guides">Care Guides</a>
-        <a href="#about">About</a>
+        
       </div>
 
       <div class="navbar-extra" aria-label="Top right taskbar">
@@ -353,10 +353,17 @@ if (!empty($animal['main_photo'])) {
 
             <!-- Adoption CTA -->
             <div class="adoption-cta">
-              <div class="adoption-question">
-                If you are interested to adopt
-              </div>
-              <button class="btn-get-started" id="adoptStartBtn">Get started</button>
+              <?php if ($animal['status'] === 'Adopted'): ?>
+                <div class="adoption-question" style="color: #d9534f; font-weight: bold;">
+                  This animal has been adopted
+                </div>
+                <button class="btn-get-started" id="adoptStartBtn" disabled style="background-color: #ccc; cursor: not-allowed; opacity: 0.6;">Already Adopted</button>
+              <?php else: ?>
+                <div class="adoption-question">
+                  If you are interested to adopt
+                </div>
+                <button class="btn-get-started" id="adoptStartBtn">Get started</button>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -417,9 +424,16 @@ if (!empty($animal['main_photo'])) {
 
         // Handle Get Started button with login check
         const adoptStartBtn = document.getElementById('adoptStartBtn');
-        if (adoptStartBtn) {
+        if (adoptStartBtn && !adoptStartBtn.disabled) {
           adoptStartBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Check if animal is already adopted (from PHP status)
+            const animalStatus = '<?php echo htmlspecialchars($animal['status'] ?? 'Available'); ?>';
+            if (animalStatus === 'Adopted') {
+              alert('This animal has already been adopted.');
+              return;
+            }
             
             // Check if user is logged in
             fetch('../check_session.php')

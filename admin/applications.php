@@ -38,7 +38,7 @@ if ($res) {
 $rehomes = [];
 $rehome_sql = "SELECT rs.id, rs.user_id, rs.pet_name, rs.pet_type, rs.age_years, rs.breed, rs.color, 
                        rs.weight, rs.height, rs.gender, rs.city, rs.postcode, rs.spayed_neutered, 
-                       rs.rehome_reason, rs.status, rs.submitted_at, u.nama_user, u.email_user
+                       rs.rehome_reason, rs.status, rs.submitted_at, u.nama, u.email
                 FROM rehome_submissions rs
                 LEFT JOIN user u ON u.id_user = rs.user_id
                 ORDER BY rs.submitted_at DESC LIMIT 100";
@@ -249,8 +249,8 @@ if ($noteStmt) {
                   <span style="font-size: 12px; color: #666;"><?php echo htmlspecialchars($r['gender']); ?></span>
                 </td>
                 <td>
-                  <strong><?php echo htmlspecialchars($r['nama_user']); ?></strong><br>
-                  <span style="font-size: 12px; color: #666;"><?php echo htmlspecialchars($r['email_user']); ?></span>
+                  <strong><?php echo htmlspecialchars($r['nama'] ?? 'Unknown'); ?></strong><br>
+                  <span style="font-size: 12px; color: #666;"><?php echo htmlspecialchars($r['email'] ?? 'N/A'); ?></span>
                 </td>
                 <td>
                   <?php echo htmlspecialchars($r['city']); ?><br>

@@ -111,20 +111,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let html = "";
     animals.forEach((animal) => {
+      // Check status case-insensitively to handle variations
+      const animalStatus = (animal.status || '').toString().trim();
+      const isAdopted = animalStatus.toLowerCase() === 'adopted';
       let photo = animal.main_photo || "";
       // Adjust path if it starts with uploads/
       if (photo && photo.startsWith("uploads/")) {
         photo = "../" + photo;
       }
       const imgTag = photo
-        ? `<img src="${photo}" alt="${animal.namaHewan}" onerror="this.parentElement.innerHTML='<div style=&quot;display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 12px; color: #666;&quot;>No Image</div>'" style="width: 100%; height: 100%; object-fit: cover;">`
-        : `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 12px; color: #666;">No Image</div>`;
+        ? `<img src="${photo}" alt="${animal.namaHewan}" onerror="this.parentElement.innerHTML='<div style=&quot;display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 12px; color: #666;&quot;>No Image</div>'" style="width: 100%; height: 100%; object-fit: cover; ${isAdopted ? 'opacity: 0.5; filter: grayscale(50%);' : ''}">`
+        : `<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: #e0e0e0; font-size: 12px; color: #666; ${isAdopted ? 'opacity: 0.5;' : ''}">No Image</div>`;
+      
       html += `
-        <div class="animal-card" data-id="${animal.id_hewan}" data-animal="${
+        <div class="animal-card ${isAdopted ? 'adopted-card' : ''}" data-id="${animal.id_hewan}" data-animal="${
         animal.jenis || ""
       }" data-breed="${animal.breed}" data-color="${animal.color}" data-age="${
         animal.age
-      }" style="cursor: pointer;">
+      }" data-status="${animalStatus}">
+          ${isAdopted ? '<div style="position: absolute; top: 10px; right: 10px; background: #d9534f; color: white; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 20; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">ADOPTED</div>' : ''}
           <div class="animal-photo">
             ${imgTag}
           </div>
@@ -134,6 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
         animal.color
       }, ${animal.age}</div>
             <div class="animal-gender">${animal.gender}</div>
+            ${isAdopted ? '<div style="margin-top: 8px; padding: 4px 8px; background: rgba(217, 83, 79, 0.1); color: #d9534f; border-radius: 5px; font-size: 11px; font-weight: 600; text-align: center;">Already Adopted</div>' : ''}
           </div>
         </div>
       `;
@@ -142,9 +148,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add click event listeners to animal cards
     document.querySelectorAll(".animal-card").forEach((card) => {
-      card.addEventListener("click", function () {
+      card.addEventListener("click", function (e) {
+        const status = (this.getAttribute("data-status") || '').toString().trim().toLowerCase();
+        const isAdopted = status === 'adopted';
+        
+        if (isAdopted) {
+          e.preventDefault();
+          e.stopPropagation();
+          alert("This animal has already been adopted.");
+          return false;
+        }
+        
         const animalId = this.getAttribute("data-id");
-        // Navigate to animal profile page
+        // Navigate to animal profile page only if not adopted
         window.location.href = "animalprofile.php?id=" + animalId;
       });
     });

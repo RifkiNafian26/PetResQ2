@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,22 +18,22 @@ session_start();
   </head>
   <body>
     <nav class="navbar">
-      <a href="/PetResQ/index.php" class="navbar-logo">Pet<span>ResQ</span></a>
+      <a href="#" class="navbar-logo">Pet<span>ResQ</span></a>
 
       <div class="navbar-nav">
-        <a href="/PetResQ/index.php">Home</a>
-        <a href="/PetResQ/adopt/adopt.php">Adopt</a>
-        <a href="/PetResQ/rehome/rehome.html">Rehome</a>
+        <a href="#">Home</a>
+        <a href="adopt/adopt.php">Adopt</a>
+        <a href="rehome/rehome.html">Rehome</a>
         <div class="navbar-dropdown">
           <a href="#care-guides" class="care-guides-link">Care Guides</a>
           <div class="dropdown-menu">
-            <a href="/PetResQ/careguides/Dog Care Guides.html">Dog</a>
-            <a href="/PetResQ/careguides/Cat Care Guides.html">Cat</a>
-            <a href="/PetResQ/careguides/Rabbit Care Guides.html">Rabbit</a>
+            <a href="careguides/Dog Care Guides.html">Dog</a>
+            <a href="careguides/Cat Care Guides.html">Cat</a>
+            <a href="careguides/Rabbit Care Guides.html">Rabbit</a>
           </div>
         </div>
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-          <a href="/PetResQ/Admin PetResQ/index.php">Admin</a>
+          <a href="Admin PetResQ/index.php">Admin</a>
         <?php endif; ?>
       </div>
 
@@ -64,9 +65,133 @@ session_start();
 
     <?php include __DIR__ . '/index.html.content.php'; ?>
 
+    <!-- Login/Register Modal -->
+    <div class="modal" id="auth-modal">
+      <div class="modal-content modal-horizontal">
+        <!-- Foto Hewan Login -->
+        <div class="modal-image modal-image-login active">
+          <img src="icon/login2.jpg" alt="Login" />
+        </div>
+
+        <!-- Foto Hewan Register -->
+        <div class="modal-image modal-image-register">
+          <img src="icon/register.jpg" alt="Register" />
+        </div>
+
+        <!-- Form Container -->
+        <div class="modal-form-container">
+          <div class="modal-header">
+            <h2 id="modal-title">Login</h2>
+            <button class="close-btn" id="close-modal">&times;</button>
+          </div>
+
+          <!-- Login Form -->
+          <!-- Error Message Display -->
+          <div class="form-error" id="form-error" style="display: none"></div>
+
+          <form class="tab-content active" id="login-tab" method="POST">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox">
+              <input type="checkbox" id="remember-me" />
+              <label for="remember-me">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Login</button>
+
+            <p class="form-footer">
+              Don't have an account?
+              <a href="#" class="switch-tab" data-tab="register"
+                >Register here</a
+              >
+            </p>
+          </form>
+
+          <!-- Register Form -->
+          <form class="tab-content" id="register-tab" method="POST">
+            <div class="form-group">
+              <label for="register-name">Full Name</label>
+              <input
+                type="text"
+                id="register-name"
+                name="nama"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input
+                type="email"
+                id="register-email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input
+                type="password"
+                id="register-password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="register-confirm">Confirm Password</label>
+              <input
+                type="password"
+                id="register-confirm"
+                name="confirm_password"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+
+            <div class="form-group checkbox">
+              <input type="checkbox" id="agree-terms" required />
+              <label for="agree-terms">I agree to the Terms & Conditions</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Register</button>
+
+            <p class="form-footer">
+              Already have an account?
+              <a href="#" class="switch-tab" data-tab="login">Login here</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+    
     <script>
       feather.replace();
     </script>
-    <script src="/PetResQ/js/script.js"></script>
+    <script src="js/script.js?v=3"></script>
   </body>
   </html>

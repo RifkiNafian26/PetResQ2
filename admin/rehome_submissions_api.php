@@ -34,10 +34,10 @@ $sql = "SELECT
             rs.rehome_reason,
             rs.status,
             rs.submitted_at,
-            u.nama AS nama_user,
-            u.email AS email_user
+            u.nama,
+            u.email
         FROM rehome_submissions rs
-        JOIN user u ON rs.user_id = u.id_user
+        LEFT JOIN user u ON rs.user_id = u.id_user
         ORDER BY rs.submitted_at DESC
         LIMIT 200";
 
@@ -59,8 +59,8 @@ if ($res) {
             'rehome_reason' => $row['rehome_reason'] ?? '',
             'status' => $row['status'] ?? 'submitted',
             'submitted_at' => $row['submitted_at'] ?? '',
-            'nama_user' => $row['nama_user'] ?? '',
-            'email_user' => $row['email_user'] ?? '',
+            'nama' => $row['nama'] ?? '',
+            'email' => $row['email'] ?? '',
         ];
     }
     echo json_encode(['data' => $items]);

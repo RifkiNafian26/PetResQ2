@@ -37,8 +37,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check user login status and populate start section
   function checkUserLogin() {
-    fetch("../php/check_session.php")
-      .then((response) => response.json())
+    // Get correct path for check_session.php
+    const sessionPath = typeof getPhpPath === "function"
+      ? getPhpPath("check_session.php")
+      : "../check_session.php";
+    
+    fetch(sessionPath)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         if (data.is_logged_in) {
           __userName = data.user_name || "-";
@@ -262,6 +272,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const getRadio = (name) =>
       document.querySelector(`input[name="${name}"]:checked`)?.value || "";
 
+    // Get home photos as base64 array
+    const homePhotos = [];
+    const photoInputs = document.querySelectorAll("input.home-photo-input");
+    photoInputs.forEach((input) => {
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        // Convert to base64
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          homePhotos.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
     return {
       // Selected animal to adopt
       hewan_id: __hewanId,
@@ -287,11 +312,70 @@ document.addEventListener("DOMContentLoaded", () => {
       other_animals: getRadio("other-animals"),
       vaccinated: getRadio("vaccinated"),
       experience: getVal("#experience").trim(),
+      home_photos: homePhotos, // Array of base64 encoded photos
     };
   }
 
   async function submitApplication(sendButton) {
-    const payload = buildApplicationPayload();
+    // Build payload with async photo conversion
+    const getVal = (sel) => document.querySelector(sel)?.value || "";
+    const getRadio = (name) =>
+      document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+
+    // Get home photos as base64 array (async)
+    const homePhotos = [];
+    const photoInputs = Array.from(document.querySelectorAll("input.home-photo-input"));
+    
+    // Convert all photos to base64
+    const photoPromises = photoInputs.map((input) => {
+      return new Promise((resolve) => {
+        if (input.files && input.files.length > 0) {
+          const file = input.files[0];
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            resolve(e.target.result);
+          };
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(file);
+        } else {
+          resolve(null);
+        }
+      });
+    });
+
+    const photoResults = await Promise.all(photoPromises);
+    photoResults.forEach((photo) => {
+      if (photo) homePhotos.push(photo);
+    });
+
+    const payload = {
+      // Selected animal to adopt
+      hewan_id: __hewanId,
+      id_hewan: __hewanId,
+      address: getVal("#address").trim(),
+      postcode: getVal("#postcode").trim(),
+      telephone: getVal("#telephone").trim(),
+
+      garden: getRadio("garden"),
+      living_situation: getVal("#living-situation").trim(),
+      household_setting: getVal("#household-setting").trim(),
+      household_activity: getVal("#household-activity").trim(),
+
+      adults: parseInt(getVal("#adults") || "0", 10) || 0,
+      children: parseInt(getVal("#children") || "0", 10) || 0,
+      children_ages: getVal("#age-youngest") || null,
+      visiting_children: getRadio("visiting-children") || null,
+      visiting_ages: getVal("#ages-visiting") || null,
+      flatmates: getRadio("flatmates") || null,
+      flatmates_consent: getVal("#flatmates-consent") || null,
+
+      allergies: getVal("#allergies").trim(),
+      other_animals: getRadio("other-animals"),
+      vaccinated: getRadio("vaccinated"),
+      experience: getVal("#experience").trim(),
+      home_photos: homePhotos, // Array of base64 encoded photos
+    };
+
     const sessionPath =
       typeof getPhpPath === "function"
         ? getPhpPath("submit_adoption.php")
@@ -408,11 +492,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fetch session and populate Start/Review user info
   (function fetchSessionUser() {
     try {
-      const sessionPath = getPhpPath
-        ? getPhpPath("check_session.php")
-        : "../check_session.php";
+      // Get correct path for check_session.php
+      let sessionPath = "../check_session.php";
+      
+      // Try to use getPhpPath if available (from ../js/script.js)
+      if (typeof getPhpPath === "function") {
+        try {
+          sessionPath = getPhpPath("check_session.php");
+        } catch (e) {
+          // Fallback to relative path if getPhpPath fails
+          sessionPath = "../check_session.php";
+        }
+      }
+      
       fetch(sessionPath)
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) {
+            throw new Error(`HTTP error! status: ${r.status}`);
+          }
+          return r.json();
+        })
         .then((data) => {
           if (data && data.is_logged_in) {
             __userName = data.user_name || null;
@@ -420,9 +519,14 @@ document.addEventListener("DOMContentLoaded", () => {
             populateStartProfile();
           }
         })
-        .catch((e) => console.error("session fetch error", e));
+        .catch((e) => {
+          console.error("session fetch error", e);
+          // Still populate profile with "-" on error
+          populateStartProfile();
+        });
     } catch (e) {
       console.error("session setup error", e);
+      populateStartProfile();
     }
   })();
 
