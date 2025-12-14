@@ -7,12 +7,14 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link 
-      href="https://fonts.googleapis.com/css2?family=Kavoon&family=Kreon:wght@300;400;500;600;700&display=swap" 
-      rel="stylesheet">
-    <link 
-      rel="stylesheet" 
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kavoon&family=Kreon:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     />
 
     <!-- Feather Icon -->
@@ -76,6 +78,8 @@
             <div class="dropdown-user-name" id="dropdown-name"></div>
             <div class="dropdown-user-email" id="dropdown-email"></div>
           </div>
+          <hr class="dropdown-divider" />
+          <a href="../profile/profile.php" class="dropdown-item">Profile</a>
           <hr class="dropdown-divider" />
           <a href="#" id="logout-btn" class="dropdown-item">Logout</a>
         </div>
@@ -657,8 +661,12 @@
               />
             </div>
             <div class="form-actions center">
-              <button class="btn btn-profile" type="button">
-                Go To My Profile
+              <button
+                class="btn btn-profile"
+                type="button"
+                onclick="window.location.href='../index.php'"
+              >
+                Go To Home Page
               </button>
             </div>
           </div>
