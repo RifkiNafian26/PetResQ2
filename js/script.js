@@ -125,7 +125,7 @@ function setupFilterCollapse() {
 // Set active navbar link based on current page
 function setActiveNavLink() {
   const currentPath = window.location.pathname;
-  const currentPage = currentPath.split("/").pop() || "index.html";
+  const currentPage = currentPath.split("/").pop() || "index.php";
   const navLinks = document.querySelectorAll(".navbar-nav a");
 
   console.log("Current page:", currentPage); // Debug
@@ -642,32 +642,32 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Guard Rehome: require login, otherwise show login modal
-  const rehomeLink = Array.from(
-    document.querySelectorAll(".navbar-nav a")
-  ).find((a) => a.textContent.trim().toLowerCase() === "rehome");
+  const rehomeLink = Array.from(document.querySelectorAll('.navbar-nav a')).find(
+    (a) => a.textContent.trim().toLowerCase() === 'rehome'
+  );
   if (rehomeLink) {
-    rehomeLink.addEventListener("click", function (e) {
+    rehomeLink.addEventListener('click', function (e) {
       // Prevent immediate navigation until we check session
       e.preventDefault();
       e.stopPropagation();
 
-      const sessionPath = getPhpPath("check_session.php");
+      const sessionPath = getPhpPath('check_session.php');
       fetch(sessionPath)
         .then((response) => {
-          if (!response.ok) throw new Error("Session check failed");
+          if (!response.ok) throw new Error('Session check failed');
           return response.json();
         })
         .then((data) => {
           if (data && data.is_logged_in) {
             // Proceed to Rehome page
-            window.location.href = getPhpPath("rehome/rehome.html");
+            window.location.href = getPhpPath('rehome/rehome.html');
           } else {
             // Not logged in: open login modal
             openLoginModal();
           }
         })
         .catch((err) => {
-          console.error("Error checking session:", err);
+          console.error('Error checking session:', err);
           // Fallback: show login modal
           openLoginModal();
         });
