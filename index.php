@@ -64,6 +64,8 @@ require_once 'config.php';
             <div class="dropdown-user-email" id="dropdown-email"></div>
           </div>
           <hr class="dropdown-divider" />
+          <a href="profile/profile.php" class="dropdown-item">Profile</a>
+          <hr class="dropdown-divider" />
           <a href="#" id="logout-btn" class="dropdown-item">Logout</a>
         </div>
       </div>
