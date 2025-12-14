@@ -15,5 +15,5 @@ if ($role !== 'admin') {
 <?php
 // Serve the existing admin panel HTML
 // You can later merge this into PHP if needed.
-readfile(__DIR__ . '/index.html');
+readfile(__DIR__ . '/index.php');
 ?>

@@ -125,7 +125,7 @@ function setupFilterCollapse() {
 // Set active navbar link based on current page
 function setActiveNavLink() {
   const currentPath = window.location.pathname;
-  const currentPage = currentPath.split("/").pop() || "index.html";
+  const currentPage = currentPath.split("/").pop() || "index.php";
   const navLinks = document.querySelectorAll(".navbar-nav a");
 
   console.log("Current page:", currentPage); // Debug
