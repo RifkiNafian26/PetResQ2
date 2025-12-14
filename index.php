@@ -11,17 +11,23 @@ require_once 'config.php';
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Kreon:wght@300..700&family=Poppins:wght@100;300;400;700&display=swap" rel="stylesheet" />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Kavoon&family=Kreon:wght@300;400;500;600;700&display=swap" 
+      rel="stylesheet">
+    <link 
+      rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <script src="https://unpkg.com/feather-icons"></script>
+
     <link rel="stylesheet" href="css/style.css?v=2" />
   </head>
   <body>
     <nav class="navbar">
-      <a href="#" class="navbar-logo">Pet<span>ResQ</span></a>
+      <a href="index.php" class="navbar-logo">Pet<span>ResQ</span></a>
 
       <div class="navbar-nav">
-        <a href="#">Home</a>
+        <a href="index.php">Home</a>
         <a href="adopt/adopt.php">Adopt</a>
         <a href="rehome/rehome.html">Rehome</a>
         <div class="navbar-dropdown">
@@ -85,10 +91,10 @@ require_once 'config.php';
             <button class="close-btn" id="close-modal">&times;</button>
           </div>
 
-          <!-- Login Form -->
           <!-- Error Message Display -->
           <div class="form-error" id="form-error" style="display: none"></div>
 
+          <!-- Login Form -->
           <form class="tab-content active" id="login-tab" method="POST">
             <div class="form-group">
               <label for="login-email">Email</label>
@@ -192,6 +198,7 @@ require_once 'config.php';
     <script>
       feather.replace();
     </script>
+    
     <script src="js/script.js?v=3"></script>
   </body>
   </html>
