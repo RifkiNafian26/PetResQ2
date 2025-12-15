@@ -138,7 +138,7 @@ function setActiveNavLink() {
 
     // Home page
     if (
-      currentPage === "index.php" ||
+      currentPage === "index.html" ||
       currentPage === "index.php" ||
       currentPage === "" ||
       currentPage === "PetResQ"

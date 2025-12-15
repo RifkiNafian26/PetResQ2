@@ -132,8 +132,8 @@ if (isset($_FILES['pet_image']) && $_FILES['pet_image']['error'] === UPLOAD_ERR_
     if (in_array($file_ext, $allowed_exts)) {
         $file_size = $_FILES['pet_image']['size'];
         
-        // Check file size (240 KB to 1024 KB)
-        if ($file_size >= 240 * 1024 && $file_size <= 1024 * 1024) {
+        // Check file size (10 KB to 1024 KB)
+        if ($file_size >= 10 * 1024 && $file_size <= 1024 * 1024) {
             $filename = 'pet_' . $user_id . '_' . time() . '.' . $file_ext;
             $filepath = $upload_dir . $filename;
             
@@ -143,7 +143,7 @@ if (isset($_FILES['pet_image']) && $_FILES['pet_image']['error'] === UPLOAD_ERR_
         } else {
             http_response_code(400);
             if (ob_get_level()) { ob_clean(); }
-            echo json_encode(['success' => false, 'message' => 'Pet image size must be between 240 KB and 1024 KB']);
+            echo json_encode(['success' => false, 'message' => 'Pet image size must be between 10 KB and 1024 KB']);
             exit;
         }
     } else {
@@ -210,7 +210,7 @@ if (isset($_FILES['documents'])) {
             if (in_array($file_ext, $allowed_exts)) {
                 $file_size = $_FILES['documents']['size'][$i];
                 
-                if ($file_size >= 240 * 1024 && $file_size <= 1024 * 1024) {
+                if ($file_size >= 10 * 1024 && $file_size <= 1024 * 1024) {
                     $filename = 'doc_' . $user_id . '_' . time() . '_' . $i . '.' . $file_ext;
                     $filepath = $upload_dir . $filename;
                     
