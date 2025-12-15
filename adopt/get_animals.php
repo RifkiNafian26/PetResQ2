@@ -15,12 +15,14 @@ $conditions = [];
 $params = [];
 $types = '';
 
-// Add search condition
+// Add search condition: match by name, breed, or jenis (animal type)
 if (!empty($search)) {
-    $conditions[] = "(namaHewan LIKE ? OR breed LIKE ?)";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
-    $types .= 'ss';
+    $conditions[] = "(namaHewan LIKE ? OR breed LIKE ? OR jenis LIKE ?)";
+    $like = "%$search%";
+    $params[] = $like;
+    $params[] = $like;
+    $params[] = $like;
+    $types .= 'sss';
 }
 
 // Add animal type filter using correct column 'jenis'
