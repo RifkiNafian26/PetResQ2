@@ -353,9 +353,6 @@ if (!empty($animal['main_photo'])) {
               </div>
             </div>
 
-            <!-- Contact Owner -->
-            <button class="btn-contact">Start chat</button>
-
             <!-- Adoption CTA -->
             <div class="adoption-cta">
               <?php if ($animal['status'] === 'Adopted'): ?>
